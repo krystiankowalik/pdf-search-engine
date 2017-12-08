@@ -16,11 +16,11 @@
     <dependencies>
 
     <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
-    <dependency>
+    <!--<dependency>
         <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-core</artifactId>
         <version>${lucene.version}</version>
-    </dependency>
+    </dependency>-->
 
     <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
     <dependency>
@@ -47,11 +47,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
-        <dependency>
+      <!--  <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queryparser</artifactId>
             <version>${lucene.version}</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

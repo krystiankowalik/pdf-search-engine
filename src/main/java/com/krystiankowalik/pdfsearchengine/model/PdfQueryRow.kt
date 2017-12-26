@@ -1,7 +1,5 @@
 package com.krystiankowalik.pdfsearchengine.model
 
-data class PdfQueryRow(val stringsToQuery: MutableList<String>,
+data class PdfQueryRow(var regex: Regex,
                        val hits: MutableSet<String>
-) {
-    constructor() : this(mutableListOf(), mutableSetOf())
-}
+)

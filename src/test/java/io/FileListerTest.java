@@ -1,3 +1,5 @@
+package io;
+
 import com.krystiankowalik.pdfsearchengine.io.FileLister;
 import com.krystiankowalik.pdfsearchengine.io.RecursiveFileLister;
 import org.junit.Before;

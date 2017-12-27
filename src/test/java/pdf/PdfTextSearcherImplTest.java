@@ -1,5 +1,8 @@
+package pdf;
+
 import com.krystiankowalik.pdfsearchengine.pdf.extractor.PdfTextExtractor;
 import com.krystiankowalik.pdfsearchengine.pdf.extractor.PdfTextExtractorImpl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,6 +19,7 @@ public class PdfTextSearcherImplTest {
 
     private final static String fileName = "fileName.pdf";
     private final static String text = "Hello World";
+    private static String fullPath;
 
 
     @Rule
@@ -25,8 +29,9 @@ public class PdfTextSearcherImplTest {
 
     @Before
     public void setup() throws IOException {
-        PdfTestUtils.createSamplePdf(temporaryFolder + File.pathSeparator + fileName, text);
-        pdfTextExtractorImpl = new PdfTextExtractorImpl(temporaryFolder + File.pathSeparator + fileName);
+        fullPath = temporaryFolder + File.pathSeparator + fileName;
+        PdfTestUtils.createSamplePdf(fullPath, text);
+        pdfTextExtractorImpl = new PdfTextExtractorImpl(fullPath);
     }
 
 
@@ -40,4 +45,10 @@ public class PdfTextSearcherImplTest {
         assertEquals(text.trim(), pdfTextExtractorImpl.getText().trim());
     }
 
+
+    @After
+    public void tearDown() {
+        File file = new File(fullPath);
+        file.delete();
+    }
 }

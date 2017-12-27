@@ -20,10 +20,10 @@ class Control() {
         val allFiles = RecursiveFileLister(pdfSearchBaseFolder)
                 .list("pdf")
 
-        // 2. Write files to sheet
+        // 2. Write files to apacheSheet
         val workbook = WorkbookFactory.create(FileInputStream(inputFilePath))
 
-        // 3. Read queries from query sheet to memory
+        // 3. Read queries from query apacheSheet to memory
         val queries = mutableListOf<PdfQueryRow>()
         val querySheet = workbook.getSheet("Query")
         (0..querySheet.lastRowNum)

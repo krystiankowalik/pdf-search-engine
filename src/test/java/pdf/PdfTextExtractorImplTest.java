@@ -1,3 +1,5 @@
+package pdf;
+
 import com.krystiankowalik.pdfsearchengine.pdf.searcher.RegexPdfSearcher;
 import com.krystiankowalik.pdfsearchengine.pdf.searcher.RegexPdfSearcherImpl;
 import kotlin.text.Regex;

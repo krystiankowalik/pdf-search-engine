@@ -1,4 +1,6 @@
-package com.krystiankowalik.pdfsearchengine
+import com.krystiankowalik.pdfsearchengine.Control
+
+/*package com.krystiankowalik.pdfsearchengine
 
 import javafx.application.Application
 import javafx.scene.Scene
@@ -9,8 +11,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
 
-/*
-class App : Application() {
+class App : tornadofx.App() {
     override fun start(stage: Stage) {
         val mainContainer = VBox()
 
@@ -18,7 +19,7 @@ class App : Application() {
         textField.promptText = "Enter base pdf search folder"
         textField.isFocused
         val button = Button()
-        button.isDefaultButton=true
+        button.isDefaultButton = true
 
         button.requestFocus()
         mainContainer.children.addAll(textField, button)

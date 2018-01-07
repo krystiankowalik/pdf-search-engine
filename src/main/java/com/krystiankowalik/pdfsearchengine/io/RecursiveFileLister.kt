@@ -14,7 +14,7 @@ class RecursiveFileLister(override val baseDirectory: String) : FileLister(baseD
 
     override fun list(extension: String): List<File> =
             getRecursiveFileStreamFromBaseDirectory()
-                    .filter({ f -> f.toString().trim().endsWith(extension) })
+                    .filter({ f -> f.toString().trim().endsWith("." + extension) })
                     .collect(Collectors.toList())
 
     private fun getRecursiveFileStreamFromBaseDirectory(): Stream<File> =

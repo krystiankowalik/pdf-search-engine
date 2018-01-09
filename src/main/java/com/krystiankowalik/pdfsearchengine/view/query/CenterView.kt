@@ -3,10 +3,14 @@ package com.krystiankowalik.pdfsearchengine.view.query
 import com.krystiankowalik.pdfsearchengine.controller.CenterViewController
 import com.krystiankowalik.pdfsearchengine.controller.FileDialogController
 import com.krystiankowalik.pdfsearchengine.controller.FileOpenController
+import com.krystiankowalik.pdfsearchengine.event.ChangePdfQueryEvent
 import com.krystiankowalik.pdfsearchengine.model.PdfQueryNew
+import com.krystiankowalik.pdfsearchengine.view.SearchAllFilesFragment
 import javafx.collections.FXCollections
 import javafx.scene.control.TextField
 import javafx.scene.layout.Priority
+import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.*
 
 class CenterView : View() {
@@ -22,6 +26,7 @@ class CenterView : View() {
 
     private val openIcon = resources.imageview("/image/folder_open.png")
     private val downloadIcon = resources.imageview("/image/icon_download.png")
+
 
     override val root = vbox {
         hbox {
@@ -65,7 +70,6 @@ class CenterView : View() {
             }
             column("Searched Text", PdfQueryNew::searchedText) {
                 minWidth = 50.0
-
                 isEditable = true
             }
 
@@ -87,13 +91,46 @@ class CenterView : View() {
                     }
                 }
             }
+            isEditable = true
+            contextmenu {
+                item("Search") {
+                    action {
+                        selectedItem.whenNotNull {
+                            SearchAllFilesFragment(selectedItem!!)
+                                    .openModal(StageStyle.DECORATED,
+                                            Modality.APPLICATION_MODAL,
+                                            true,
+                                            this@CenterView.currentWindow,
+                                            false,
+                                            true)
+                        }
+                    }
 
+                }
+            }
+
+
+            hgrow = Priority.ALWAYS
+            vgrow = Priority.ALWAYS
         }
+        hgrow = Priority.ALWAYS
+        vgrow = Priority.ALWAYS
     }
 
     private fun openFile(path: String) {
         fileOpenController.openFile(path)
     }
 
+    fun updatePdfQuery(index: Int, newPdfQuery: PdfQueryNew) {
+        queries[index] = newPdfQuery
 
+    }
+
+
+}
+
+fun Any?.whenNotNull(f: () -> Unit) {
+    if (this != null) {
+        f()
+    }
 }

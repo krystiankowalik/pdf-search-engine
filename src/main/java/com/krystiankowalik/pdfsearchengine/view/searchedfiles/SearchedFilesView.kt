@@ -69,6 +69,8 @@ class SearchedFilesView : View() {
                 }
             }
         }
+        hgrow = Priority.ALWAYS
+        vgrow = Priority.ALWAYS
     }
 
 

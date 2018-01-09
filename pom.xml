@@ -133,7 +133,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.github.kryx07.passpaster.Main</mainClass>
+                            <mainClass>com.krystiankowalik.pdfsearchengine.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -2,16 +2,18 @@ package com.krystiankowalik.pdfsearchengine.view
 
 import com.krystiankowalik.pdfsearchengine.controller.FileDialogController
 import com.krystiankowalik.pdfsearchengine.controller.TopMenuController
-import com.krystiankowalik.pdfsearchengine.view.query.CenterView
+import com.krystiankowalik.pdfsearchengine.view.query.QueryView
 import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import tornadofx.*
 
 class TopMenu : View() {
 
     private val fileDialogController: FileDialogController by inject()
-    private val centerView: CenterView by inject()
+    private val queryView: QueryView by inject()
     private val searchedFilesView: SearchedFilesView by inject()
     private val topMenuController: TopMenuController by inject()
+
+    private val masterView: MasterView by inject()
 
     override val root = menubar {
         menu("File") {
@@ -29,22 +31,12 @@ class TopMenu : View() {
             */
             item("Run search", "Ctrl+R") {
                 action {
-                    runAsyncWithOverlay {
-                        topMenuController.runSearch(centerView.queries, searchedFilesView.filesList)
-                    } ui {
-                        centerView.queries.replaceAll { it }
-                    }
+                    runSearch()
                 }
             }
             item("Save Files in...", "Ctrl+S") {
                 action {
-                    val newLocation = fileDialogController.pickFolder(this@TopMenu)
-                    if (newLocation != null) {
-                        runAsyncWithOverlay {
-                            topMenuController.saveFilesWithChangedNames(centerView.queries.filter({ it.hit.isNotEmpty() }), newLocation.toString())
-                        }
-                    }
-
+                    saveFiles()
                 }
             }
 
@@ -56,6 +48,23 @@ class TopMenu : View() {
         menu("Help")
     }
 
+    private fun runSearch() {
+        masterView.root.runAsyncWithOverlay {
+            topMenuController.runSearch(queryView.queries, searchedFilesView.filesList)
+        } ui {
+            queryView.queries.setAll(it)
+        }
+    }
+
+    private fun saveFiles() {
+        val newLocation = fileDialogController.pickFolder(this@TopMenu)
+        masterView.root.runAsyncWithOverlay {
+            topMenuController.saveFilesWithChangedNames(queryView.queries.filter({ it.hit.isNotEmpty() }), newLocation.toString())
+        }
+    }
+
 }
+
+
 
 

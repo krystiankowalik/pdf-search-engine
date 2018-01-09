@@ -1,20 +1,18 @@
-package com.krystiankowalik.pdfsearchengine.view
+package com.krystiankowalik.pdfsearchengine.view.search
 
 import com.krystiankowalik.pdfsearchengine.controller.FileOpenController
-import com.krystiankowalik.pdfsearchengine.event.ChangePdfQueryEvent
 import com.krystiankowalik.pdfsearchengine.model.PdfQueryNew
 import com.krystiankowalik.pdfsearchengine.pdf.searcher.BatchPdfSearcherImpl
-import com.krystiankowalik.pdfsearchengine.view.query.CenterView
-import com.krystiankowalik.pdfsearchengine.view.query.whenNotNull
+import com.krystiankowalik.pdfsearchengine.util.whenNotNull
+import com.krystiankowalik.pdfsearchengine.view.query.QueryView
 import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import javafx.collections.FXCollections
-import javafx.scene.Parent
 import tornadofx.*
 import java.io.File
 
 class SearchAllFilesFragment(pdfQuery: PdfQueryNew) : Fragment() {
 
-    private val centerView: CenterView by inject()
+    private val queryView: QueryView by inject()
     private val searchedFilesView: SearchedFilesView by inject()
 
     private val matchingPdfFiles = FXCollections.observableArrayList<File>()
@@ -37,8 +35,7 @@ class SearchAllFilesFragment(pdfQuery: PdfQueryNew) : Fragment() {
                         batchPdfSearcher.getAllFilesContainingTerm(Regex(textField.text))
                     } ui {
                         with(matchingPdfFiles) {
-                            clear()
-                            addAll(it)
+                            setAll(it)
                         }
                     }
                 }
@@ -60,7 +57,7 @@ class SearchAllFilesFragment(pdfQuery: PdfQueryNew) : Fragment() {
                     selectedFile.whenNotNull {
                         println(selectedFile)
                         pdfQuery.hit = selectedFile.toString()
-                        centerView.updatePdfQuery(centerView.queries.indexOf(pdfQuery), pdfQuery)
+                        queryView.updatePdfQuery(queryView.queries.indexOf(pdfQuery), pdfQuery)
                     }
                 }
 

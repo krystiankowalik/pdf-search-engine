@@ -33,8 +33,7 @@ class SearchedFilesView : View() {
                         runAsyncWithProgress {
                             searchFilesController.listFiles(textfield.text)
                         } ui {
-                            filesList.clear()
-                            filesList.addAll(it)
+                            filesList.setAll(it)
                         }
                     }
 
@@ -46,7 +45,7 @@ class SearchedFilesView : View() {
                         searchFilesController.listFiles(textfield.text)
                     } ui {
                         filesList.clear()
-                        filesList.addAll(it)
+                        filesList.setAll(it)
                     }
                 }
             }

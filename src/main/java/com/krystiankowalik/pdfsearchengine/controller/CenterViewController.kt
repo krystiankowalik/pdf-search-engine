@@ -1,27 +1,25 @@
 package com.krystiankowalik.pdfsearchengine.controller
 
-import com.krystiankowalik.pdfsearchengine.excel.mutableCell
-import com.krystiankowalik.pdfsearchengine.io.RecursiveFileLister
 import com.krystiankowalik.pdfsearchengine.model.PdfQueryNew
-import com.krystiankowalik.pdfsearchengine.model.PdfQueryRow
-import com.krystiankowalik.pdfsearchengine.pdf.searcher.RegexPdfSearcherImpl
-import com.krystiankowalik.pdfsearchengine.view.query.CenterView
+import com.krystiankowalik.pdfsearchengine.util.whenNotEmpty
+import com.krystiankowalik.pdfsearchengine.view.query.QueryView
 import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import tornadofx.Controller
+import tornadofx.*
 import java.io.FileInputStream
-import java.io.FileOutputStream
 
 class CenterViewController : Controller() {
 
     private val formatter = DataFormatter()
 
-    private val centerView: CenterView by inject()
-    private val searchFilesController: SearchFilesController by inject()
+    private val queryView: QueryView by inject()
+
+    private val fileDialogController: FileDialogController by inject()
+
 
     fun getQuery(): MutableList<PdfQueryNew> {
-        val workbook = WorkbookFactory.create(FileInputStream(centerView.queryFilePath.text))
-        centerView.queries.clear()
+        val workbook = WorkbookFactory.create(FileInputStream(queryView.queryFilePath.text))
+        queryView.queries.clear()
         val queries = mutableListOf<PdfQueryNew>()
         val querySheet = workbook.getSheetAt(0)
         (1..querySheet.lastRowNum)
@@ -33,6 +31,18 @@ class CenterViewController : Controller() {
         queries.forEach(::println)
         workbook.close()
         return queries
+    }
+
+    fun pickFile(view: View) {
+        val pickedFile = fileDialogController.pickFile(view, listOf("xlsx"))
+        pickedFile.whenNotEmpty {
+            queryView.queryFilePath.text = pickedFile
+            queryView.readQueryFromFile()
+        }
+    }
+
+    fun readQueryFromFile() {
+        queryView.readQueryFromFile()
     }
 
 

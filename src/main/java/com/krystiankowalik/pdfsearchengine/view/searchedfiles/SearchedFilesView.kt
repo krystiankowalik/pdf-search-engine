@@ -22,6 +22,8 @@ class SearchedFilesView : View() {
         hbox {
             val textfield = textfield() {
                 promptText = "Enter search folder's path"
+                //todo remove the test location!
+                text = "/home/wd43/Downloads/testfsfds"
                 hgrow = Priority.ALWAYS
 
             }
@@ -54,22 +56,19 @@ class SearchedFilesView : View() {
         listview(filesList) {
             onDoubleClick {
                 if (!selectionModel.isEmpty) {
-                    runAsyncWithProgress {
                         openFile(selectionModel.selectedItem)
-                    }
                 }
             }
             shortcut("Enter") {
                 if (!selectionModel.isEmpty) {
 
-                    runAsyncWithProgress {
                         openFile(selectionModel.selectedItem)
-                    }
                 }
             }
+            vgrow = Priority.ALWAYS
+            hgrow = Priority.ALWAYS
         }
-        hgrow = Priority.ALWAYS
-        vgrow = Priority.ALWAYS
+
     }
 
 

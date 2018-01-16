@@ -2,8 +2,7 @@ package com.krystiankowalik.pdfsearchengine.view.query
 
 import com.krystiankowalik.pdfsearchengine.controller.CenterViewController
 import com.krystiankowalik.pdfsearchengine.controller.FileOpenController
-import com.krystiankowalik.pdfsearchengine.model.PdfQueryNew
-import com.krystiankowalik.pdfsearchengine.util.whenNotNull
+import com.krystiankowalik.pdfsearchengine.model.PdfQuery
 import com.krystiankowalik.pdfsearchengine.view.search.SearchAllFilesFragment
 import javafx.collections.FXCollections
 import javafx.scene.control.TableView
@@ -14,10 +13,10 @@ import tornadofx.*
 class QueryView : View() {
 
     val queries =
-            FXCollections.observableArrayList<PdfQueryNew>()
+            FXCollections.observableArrayList<PdfQuery>()
 
     lateinit var queryFilePath: TextField
-    lateinit var queryTableView: TableView<PdfQueryNew>
+    lateinit var queryTableView: TableView<PdfQuery>
 
     private val centerViewController: CenterViewController by inject()
     private val fileOpenController: FileOpenController by inject()
@@ -30,6 +29,8 @@ class QueryView : View() {
         hbox {
             queryFilePath = textfield {
                 promptText = "Enter query file path"
+                //todo remove the test location!
+                text = "/home/wd43/IdeaProjects/pdf-search-engine/src/main/resources/contentnew.xlsx"
                 hgrow = Priority.ALWAYS
 
             }
@@ -50,10 +51,10 @@ class QueryView : View() {
 
         queryTableView = tableview(queries)
         {
-            column("Description", PdfQueryNew::description) {}
-            column("Searched Text", PdfQueryNew::searchedText) {}
+            column("Description", PdfQuery::description) {}
+            column("Searched Text", PdfQuery::searchedText) {}
 
-            column("Hit", PdfQueryNew::hit) {}
+            column("Hit", PdfQuery::hit) {}
             onDoubleClick {
                 openCurrentlySelectedFile()
             }
@@ -64,19 +65,24 @@ class QueryView : View() {
             contextmenu {
                 item("Search") {
                     action {
-                        selectedItem.whenNotNull {
-                            SearchAllFilesFragment(selectedItem!!).openModal()
+                        selectedItem?.let {
+                            SearchAllFilesFragment(it).openModal()
                         }
                     }
 
+                }
+                shortcut("Ctrl+F") {
+                    selectedItem?.let {
+                        SearchAllFilesFragment(it).openModal()
+                    }
                 }
             }
 
             hgrow = Priority.ALWAYS
             vgrow = Priority.ALWAYS
         }
-        hgrow = Priority.ALWAYS
-        vgrow = Priority.ALWAYS
+            hgrow = Priority.ALWAYS
+            vgrow = Priority.ALWAYS
     }
 
 
@@ -91,7 +97,7 @@ class QueryView : View() {
     private fun openCurrentlySelectedFile() {
         if (!queryTableView.selectionModel.isEmpty) {
             root.runAsyncWithOverlay {
-                openFile(queryTableView.selectionModel.selectedItem.toString())
+                openFile(queryTableView.selectionModel.selectedItem.hit)
             }
         }
     }
@@ -100,9 +106,8 @@ class QueryView : View() {
         fileOpenController.openFile(path)
     }
 
-    fun updatePdfQuery(index: Int, newPdfQuery: PdfQueryNew) {
+    fun updatePdfQuery(index: Int, newPdfQuery: PdfQuery) {
         queries[index] = newPdfQuery
-
     }
 
 

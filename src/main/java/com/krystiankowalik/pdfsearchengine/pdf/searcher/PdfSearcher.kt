@@ -1,4 +1,4 @@
 package com.krystiankowalik.pdfsearchengine.pdf.searcher
 
-abstract class PdfSearcher(val pdfFilePath: String) {
+abstract class PdfSearcher(open val pdfFilePath: String) {
 }

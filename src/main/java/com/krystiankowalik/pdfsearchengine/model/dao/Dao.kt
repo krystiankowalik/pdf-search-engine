@@ -10,6 +10,8 @@ interface Dao<T> {
 
     fun delete(index: Int)
 
+    fun deleteAll()
+
     fun insert(element: T)
 
 }

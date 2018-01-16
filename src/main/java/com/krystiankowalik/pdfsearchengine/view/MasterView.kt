@@ -1,6 +1,6 @@
 package com.krystiankowalik.pdfsearchengine.view
 
-import com.krystiankowalik.pdfsearchengine.view.query.QueryView
+import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
 import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Pane
@@ -17,7 +17,7 @@ class MasterView : View() {
                 add(SearchedFilesView::class)
             }
             tab("Query", Pane()) {
-                add(QueryView::class)
+                add(QueriesView::class)
             }
 
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE

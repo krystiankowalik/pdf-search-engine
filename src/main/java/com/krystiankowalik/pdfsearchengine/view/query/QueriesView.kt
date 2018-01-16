@@ -1,29 +1,27 @@
 package com.krystiankowalik.pdfsearchengine.view.query
 
-import com.krystiankowalik.pdfsearchengine.controller.CenterViewController
-import com.krystiankowalik.pdfsearchengine.controller.FileOpenController
+import com.krystiankowalik.pdfsearchengine.controller.QueriesController
 import com.krystiankowalik.pdfsearchengine.model.PdfQuery
-import com.krystiankowalik.pdfsearchengine.view.search.SearchAllFilesFragment
+import com.krystiankowalik.pdfsearchengine.view.single.SingleQueryFragment
 import javafx.collections.FXCollections
+import javafx.scene.control.Button
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
 import javafx.scene.layout.Priority
 import tornadofx.*
 
-class QueryView : View() {
+class QueriesView : View() {
 
-    val queries =
-            FXCollections.observableArrayList<PdfQuery>()
+    private val controller: QueriesController by inject()
 
     lateinit var queryFilePath: TextField
     lateinit var queryTableView: TableView<PdfQuery>
-
-    private val centerViewController: CenterViewController by inject()
-    private val fileOpenController: FileOpenController by inject()
+    lateinit var queryExtractorButton: Button
 
     private val openIcon = resources.imageview("/image/folder_open.png")
     private val downloadIcon = resources.imageview("/image/icon_download.png")
 
+    val queries = FXCollections.observableArrayList<PdfQuery>()
 
     override val root = vbox {
         hbox {
@@ -36,21 +34,22 @@ class QueryView : View() {
             }
             button("", openIcon) {
                 action {
-                    centerViewController.pickFile(this@QueryView)
+                    controller.pickFile(this@QueriesView)
                 }
 
             }
-            button("", downloadIcon) {
+            queryExtractorButton = button("", downloadIcon) {
                 action {
-                    centerViewController.readQueryFromFile()
+                    controller.readQueryFromFile()
                 }
             }
         }
 
 
 
-        queryTableView = tableview(queries)
-        {
+        queryTableView = tableview(queries) {
+            smartResize()
+
             column("Description", PdfQuery::description) {}
             column("Searched Text", PdfQuery::searchedText) {}
 
@@ -66,14 +65,14 @@ class QueryView : View() {
                 item("Search") {
                     action {
                         selectedItem?.let {
-                            SearchAllFilesFragment(it).openModal()
+                            SingleQueryFragment(it).openModal()
                         }
                     }
 
                 }
                 shortcut("Ctrl+F") {
                     selectedItem?.let {
-                        SearchAllFilesFragment(it).openModal()
+                        SingleQueryFragment(it).openModal()
                     }
                 }
             }
@@ -81,29 +80,14 @@ class QueryView : View() {
             hgrow = Priority.ALWAYS
             vgrow = Priority.ALWAYS
         }
-            hgrow = Priority.ALWAYS
-            vgrow = Priority.ALWAYS
-    }
-
-
-    fun readQueryFromFile() {
-        root.runAsyncWithOverlay {
-            centerViewController.getQuery()
-        } ui {
-            queries.setAll(it)
-        }
+        hgrow = Priority.ALWAYS
+        vgrow = Priority.ALWAYS
     }
 
     private fun openCurrentlySelectedFile() {
         if (!queryTableView.selectionModel.isEmpty) {
-            root.runAsyncWithOverlay {
-                openFile(queryTableView.selectionModel.selectedItem.hit)
-            }
+            controller.openFile(queryTableView.selectionModel.selectedItem.hit)
         }
-    }
-
-    private fun openFile(path: String) {
-        fileOpenController.openFile(path)
     }
 
     fun updatePdfQuery(index: Int, newPdfQuery: PdfQuery) {

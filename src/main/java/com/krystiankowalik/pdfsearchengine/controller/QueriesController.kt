@@ -1,25 +1,27 @@
 package com.krystiankowalik.pdfsearchengine.controller
 
+import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.model.PdfQuery
 import com.krystiankowalik.pdfsearchengine.util.whenNotEmpty
-import com.krystiankowalik.pdfsearchengine.view.query.QueryView
+import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
 import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import tornadofx.*
 import java.io.FileInputStream
 
-class CenterViewController : Controller() {
+class QueriesController : Controller() {
 
     private val formatter = DataFormatter()
 
-    private val queryView: QueryView by inject()
+    private val view: QueriesView by inject()
 
     private val fileDialogController: FileDialogController by inject()
+    private val fileOpener: FileOpener by inject()
 
 
-    fun getQuery(): MutableList<PdfQuery> {
-        val workbook = WorkbookFactory.create(FileInputStream(queryView.queryFilePath.text))
-        queryView.queries.clear()
+    private fun getQuery(): MutableList<PdfQuery> {
+        val workbook = WorkbookFactory.create(FileInputStream(view.queryFilePath.text))
+        view.queries.clear()
         val queries = mutableListOf<PdfQuery>()
         val querySheet = workbook.getSheetAt(0)
         (1..querySheet.lastRowNum)
@@ -36,13 +38,21 @@ class CenterViewController : Controller() {
     fun pickFile(view: View) {
         val pickedFile = fileDialogController.pickFile(view, listOf("xlsx"))
         pickedFile.whenNotEmpty {
-            queryView.queryFilePath.text = pickedFile
-            queryView.readQueryFromFile()
+            this.view.queryFilePath.text = pickedFile
+            readQueryFromFile()
         }
     }
 
+    fun openFile(path: String) {
+        fileOpener.openFile(path)
+    }
+
     fun readQueryFromFile() {
-        queryView.readQueryFromFile()
+        view.queryExtractorButton.runAsyncWithProgress {
+            getQuery()
+        } ui {
+            view.queries.setAll(it)
+        }
     }
 
 

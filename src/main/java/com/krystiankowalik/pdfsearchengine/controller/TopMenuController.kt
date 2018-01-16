@@ -1,10 +1,12 @@
 package com.krystiankowalik.pdfsearchengine.controller
 
+import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.model.PdfQuery
 import com.krystiankowalik.pdfsearchengine.pdf.searcher.RegexPdfSearcherImpl
 import com.krystiankowalik.pdfsearchengine.util.whenNotEmpty
 import com.krystiankowalik.pdfsearchengine.view.TopMenu
-import com.krystiankowalik.pdfsearchengine.view.query.QueryView
+import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
+import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import javafx.collections.ObservableList
 import tornadofx.*
 import java.io.File
@@ -12,14 +14,24 @@ import java.io.File
 class TopMenuController : Controller() {
 
     private val fileDialogController: FileDialogController by inject()
-    private val queryView: QueryView by inject()
-    private val fileOpenController: FileOpenController by inject()
+    private val queriesView: QueriesView by inject()
+    private val fileOpener: FileOpener by inject()
+    private val searchedFilesView: SearchedFilesView by inject()
 
 
     private val view: TopMenu by inject()
 
+    fun runSearch() {
+        queriesView.root.runAsyncWithOverlay {
+            doRunSearch(queriesView.queries, searchedFilesView.filesList)
+        } ui {
+            println("I got $it from run single")
+            queriesView.queries.replaceAll({ it })
 
-    fun runSearch(queries: ObservableList<PdfQuery>?, filesList: ObservableList<String>?): ObservableList<PdfQuery> {
+        }
+    }
+
+    private fun doRunSearch(queries: ObservableList<PdfQuery>?, filesList: ObservableList<String>?): ObservableList<PdfQuery> {
         filesList?.forEach({
             val pdfSearcher = RegexPdfSearcherImpl(it.toString())
             queries?.forEach({
@@ -37,7 +49,7 @@ class TopMenuController : Controller() {
         val folder = pickFolder()
 
         folder.whenNotEmpty {
-            doSaveFiles(queryView.queries.filter({ it.hit.isNotEmpty() }), folder)
+            doSaveFiles(queriesView.queries.filter({ it.hit.isNotEmpty() }), folder)
         }
 
         openFolder(folder)
@@ -71,6 +83,6 @@ class TopMenuController : Controller() {
         return File(this.parent + File.separator + this.nameWithoutExtension + "_" + System.nanoTime() + this.extension)
     }
 
-    private fun openFolder(folder: String) = fileOpenController.openFile(folder)
+    private fun openFolder(folder: String) = fileOpener.openFile(folder)
 
 }

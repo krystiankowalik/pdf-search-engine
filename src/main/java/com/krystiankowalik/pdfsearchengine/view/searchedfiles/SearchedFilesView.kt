@@ -1,7 +1,7 @@
 package com.krystiankowalik.pdfsearchengine.view.searchedfiles
 
 import com.krystiankowalik.pdfsearchengine.controller.FileDialogController
-import com.krystiankowalik.pdfsearchengine.controller.FileOpenController
+import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.controller.SearchFilesController
 import javafx.collections.FXCollections
 import javafx.scene.layout.Priority
@@ -11,7 +11,7 @@ class SearchedFilesView : View() {
 
     private val fileDialogController: FileDialogController by inject()
     private val searchFilesController: SearchFilesController by inject()
-    private val fileOpenController: FileOpenController by inject()
+    private val fileOpener: FileOpener by inject()
 
     private val openIcon = resources.imageview("/image/folder_open.png")
     private val searchIcon = resources.imageview("/image/icon_search.png")
@@ -21,7 +21,7 @@ class SearchedFilesView : View() {
     override val root = vbox {
         hbox {
             val textfield = textfield() {
-                promptText = "Enter search folder's path"
+                promptText = "Enter single folder's path"
                 //todo remove the test location!
                 text = "/home/wd43/Downloads/testfsfds"
                 hgrow = Priority.ALWAYS
@@ -73,7 +73,7 @@ class SearchedFilesView : View() {
 
 
     fun openFile(path: String) {
-        fileOpenController.openFile(path)
+        fileOpener.openFile(path)
     }
 
 

@@ -1,11 +1,10 @@
-package com.krystiankowalik.pdfsearchengine.controller
+package com.krystiankowalik.pdfsearchengine.io
 
 import tornadofx.Controller
 import java.awt.Desktop
-import java.awt.SystemColor.desktop
 import java.io.File
 
-class FileOpenController : Controller() {
+class FileOpener : Controller() {
 
     private val desktop = Desktop.getDesktop()
 

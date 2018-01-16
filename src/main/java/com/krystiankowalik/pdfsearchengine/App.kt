@@ -1,6 +1,5 @@
 package com.krystiankowalik.pdfsearchengine
 
-import com.krystiankowalik.pdfsearchengine.controller.FileOpenController
 import com.krystiankowalik.pdfsearchengine.view.MasterView
 import javafx.application.Application
 import javafx.stage.Stage

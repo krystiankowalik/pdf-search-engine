@@ -1,6 +1,5 @@
 package com.krystiankowalik.pdfsearchengine.db
 
-import com.krystiankowalik.pdfsearchengine.model.SearchedFile
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -31,16 +30,6 @@ object SqLiteDb {
         }
     }
 
-
-
-
-
-    fun insertSearchedFile(path: String, contents: String) {
-        executeStatement("INSERT INTO $tableName (id, path, contents) " +
-                "VALUES (1, '$path','$contents')")
-    }
-
-    val tableName = "searched_files"
 
 
 }

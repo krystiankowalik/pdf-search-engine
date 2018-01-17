@@ -50,6 +50,8 @@ object SearchedFileDao : Dao<SearchedFile> {
 
     }
 
+    override fun size(): Int = getAll().size
+
     override fun update(index: Int, element: SearchedFile) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -64,7 +66,7 @@ object SearchedFileDao : Dao<SearchedFile> {
 
     override fun insert(element: SearchedFile) {
         SqLiteDb.executeStatement("INSERT INTO ${tableName} (id, path, contents) " +
-                "VALUES (1, '${element.path}','${element.contents}')")
+                "VALUES ('${element.id}', '${element.path}','${element.contents}')")
     }
 
 

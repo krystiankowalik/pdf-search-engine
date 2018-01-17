@@ -69,9 +69,11 @@ class SingleQueryFragment(pdfQuery: PdfQuery) : Fragment() {
 
             }
 
+            vgrow = Priority.ALWAYS
             hgrow = Priority.ALWAYS
 
         }
+        vgrow = Priority.ALWAYS
         hgrow = Priority.ALWAYS
 
     }

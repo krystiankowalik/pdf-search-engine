@@ -12,6 +12,8 @@ interface Dao<T> {
 
     fun deleteAll()
 
+    fun size():Int
+
     fun insert(element: T)
 
 }

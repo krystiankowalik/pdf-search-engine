@@ -1,26 +1,27 @@
 package com.krystiankowalik.pdfsearchengine.view.searchedfiles
 
-import com.krystiankowalik.pdfsearchengine.controller.FileDialogController
-import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.controller.SearchFilesController
 import javafx.collections.FXCollections
+import javafx.scene.control.Button
+import javafx.scene.control.TextField
 import javafx.scene.layout.Priority
 import tornadofx.*
 
 class SearchedFilesView : View() {
 
-    private val fileDialogController: FileDialogController by inject()
-    private val searchFilesController: SearchFilesController by inject()
-    private val fileOpener: FileOpener by inject()
+    private val controller: SearchFilesController by inject()
 
     private val openIcon = resources.imageview("/image/folder_open.png")
     private val searchIcon = resources.imageview("/image/icon_search.png")
+
+    lateinit var baseSearchFolder: TextField
+    lateinit var searchButton: Button
 
     val filesList = FXCollections.observableArrayList<String>()
 
     override val root = vbox {
         hbox {
-            val textfield = textfield() {
+            baseSearchFolder = textfield() {
                 promptText = "Enter single folder's path"
                 //todo remove the test location!
                 text = "/home/wd43/Downloads/testfsfds"
@@ -29,26 +30,12 @@ class SearchedFilesView : View() {
             }
             button("", openIcon) {
                 action {
-                    val pickedFolder = fileDialogController.pickFolder(this@SearchedFilesView)
-                    if (pickedFolder.isNotBlank()) {
-                        textfield.text = pickedFolder
-                        runAsyncWithProgress {
-                            searchFilesController.listFiles(textfield.text)
-                        } ui {
-                            filesList.setAll(it)
-                        }
-                    }
-
+                    controller.pickSearchFolder()
                 }
             }
-            button("", searchIcon) {
+            searchButton = button("", searchIcon) {
                 action {
-                    runAsyncWithProgress {
-                        searchFilesController.listFiles(textfield.text)
-                    } ui {
-                        filesList.clear()
-                        filesList.setAll(it)
-                    }
+                    controller.importSearchedFiles()
                 }
             }
         }
@@ -56,24 +43,18 @@ class SearchedFilesView : View() {
         listview(filesList) {
             onDoubleClick {
                 if (!selectionModel.isEmpty) {
-                        openFile(selectionModel.selectedItem)
+                    controller.openFile(selectionModel.selectedItem)
                 }
             }
             shortcut("Enter") {
                 if (!selectionModel.isEmpty) {
-
-                        openFile(selectionModel.selectedItem)
+                    controller.openFile(selectionModel.selectedItem)
                 }
             }
             vgrow = Priority.ALWAYS
             hgrow = Priority.ALWAYS
         }
 
-    }
-
-
-    fun openFile(path: String) {
-        fileOpener.openFile(path)
     }
 
 

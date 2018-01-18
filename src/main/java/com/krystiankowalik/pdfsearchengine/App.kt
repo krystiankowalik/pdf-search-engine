@@ -18,13 +18,10 @@ object App {
     @JvmStatic
     fun main(args: Array<String>) {
         Application.launch(TornadoApp::class.java, *args)
-
-        testItOut()
     }
 
 
-    fun testItOut() {
-    }
+
 
 }
 

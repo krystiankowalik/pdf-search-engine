@@ -1,30 +1,31 @@
 package com.krystiankowalik.pdfsearchengine.view.searchedfiles
 
-import com.krystiankowalik.pdfsearchengine.controller.SearchFilesController
+import com.krystiankowalik.pdfsearchengine.controller.SearchedFilesController
+import com.krystiankowalik.pdfsearchengine.model.SearchedFile
 import javafx.collections.FXCollections
 import javafx.scene.control.Button
+import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.layout.Priority
 import tornadofx.*
 
 class SearchedFilesView : View() {
 
-    private val controller: SearchFilesController by inject()
+    private val controller: SearchedFilesController by inject()
 
     private val openIcon = resources.imageview("/image/folder_open.png")
     private val searchIcon = resources.imageview("/image/icon_search.png")
 
     lateinit var baseSearchFolder: TextField
     lateinit var searchButton: Button
+    lateinit var filePathsListView: ListView<SearchedFile>
 
-    val filesList = FXCollections.observableArrayList<String>()
+    val filesList = FXCollections.observableArrayList<SearchedFile>()
 
     override val root = vbox {
         hbox {
             baseSearchFolder = textfield() {
                 promptText = "Enter single folder's path"
-                //todo remove the test location!
-                text = "/home/wd43/Downloads/testfsfds"
                 hgrow = Priority.ALWAYS
 
             }
@@ -40,15 +41,15 @@ class SearchedFilesView : View() {
             }
         }
 
-        listview(filesList) {
+        filePathsListView = listview(filesList) {
             onDoubleClick {
                 if (!selectionModel.isEmpty) {
-                    controller.openFile(selectionModel.selectedItem)
+                    controller.openFile(selectionModel.selectedItem.path)
                 }
             }
             shortcut("Enter") {
                 if (!selectionModel.isEmpty) {
-                    controller.openFile(selectionModel.selectedItem)
+                    controller.openFile(selectionModel.selectedItem.path)
                 }
             }
             vgrow = Priority.ALWAYS

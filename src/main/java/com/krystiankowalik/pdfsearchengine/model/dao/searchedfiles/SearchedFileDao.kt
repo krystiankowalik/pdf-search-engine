@@ -50,7 +50,16 @@ object SearchedFileDao : Dao<SearchedFile> {
 
     }
 
-    override fun size(): Int = getAll().size
+    override fun size(): Int {
+        var count: Int? = null
+        SqLiteDb.inTransaction {
+            val statement = SqLiteDb.connection.createStatement()
+            val resultsFromDb = statement.executeQuery("SELECT COUNT(*) FROM $tableName")
+
+            count = resultsFromDb.getInt(1)
+        }
+        return count!!
+    }
 
     override fun update(index: Int, element: SearchedFile) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -66,7 +75,7 @@ object SearchedFileDao : Dao<SearchedFile> {
 
     override fun insert(element: SearchedFile) {
         SqLiteDb.executeStatement("INSERT INTO ${tableName} (id, path, contents) " +
-                "VALUES ('${element.id}', '${element.path}','${element.contents}')")
+                "VALUES ('${size()}', '${element.path}','${element.contents}')")
     }
 
 

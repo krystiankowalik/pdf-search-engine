@@ -1,7 +1,6 @@
 package com.krystiankowalik.pdfsearchengine.view.single
 
 import com.krystiankowalik.pdfsearchengine.controller.SingleQueryController
-import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.model.PdfQuery
 import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
 import javafx.collections.FXCollections
@@ -12,15 +11,14 @@ import javafx.scene.layout.Priority
 import tornadofx.*
 import java.io.File
 
-class SingleQueryFragment(pdfQuery: PdfQuery) : Fragment() {
+class SingleQueryFragment(val pdfQuery: PdfQuery) : Fragment() {
 
-    private val controller = SingleQueryController(this)
 
     private val queriesView: QueriesView by inject()
 
     private val searchIcon = resources.imageview("/image/icon_search.png")
 
-    lateinit var textField: TextField
+    lateinit var searchedTextField: TextField
     lateinit var searchButton: Button
     lateinit var pdfFilesListView: ListView<File>
 
@@ -32,7 +30,7 @@ class SingleQueryFragment(pdfQuery: PdfQuery) : Fragment() {
 
         hbox {
 
-            textField = textfield {
+            searchedTextField = textfield {
                 promptText = "Search in all listed files"
                 shortcut("Enter") {
                     controller.search()
@@ -52,10 +50,12 @@ class SingleQueryFragment(pdfQuery: PdfQuery) : Fragment() {
             onDoubleClick {
                 controller.openFile(selectionModel.selectedItem.toString())
             }
+
         }
 
         hbox {
             button("OK") {
+                maxWidth = Double.MAX_VALUE
                 action {
                     val selectedFile = pdfFilesListView.selectionModel.selectedItem
                     selectedFile?.let {
@@ -65,18 +65,15 @@ class SingleQueryFragment(pdfQuery: PdfQuery) : Fragment() {
                     }
                 }
                 hgrow = Priority.ALWAYS
-                vgrow = Priority.ALWAYS
-
             }
-
-            vgrow = Priority.ALWAYS
             hgrow = Priority.ALWAYS
 
         }
-        vgrow = Priority.ALWAYS
-        hgrow = Priority.ALWAYS
 
     }
+
+    private val controller = SingleQueryController(this)
+
 
 
 }

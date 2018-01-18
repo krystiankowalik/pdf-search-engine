@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
+
 class RecursiveFileLister(override val baseDirectory: String) : FileLister(baseDirectory) {
 
     override fun list(): List<File> =
@@ -13,14 +14,12 @@ class RecursiveFileLister(override val baseDirectory: String) : FileLister(baseD
                     .collect(Collectors.toList())
 
     override fun list(extension: String): List<File> =
-            getRecursiveFileStreamFromBaseDirectory()
-                    .filter({ f -> f.toString().trim().endsWith("." + extension) })
-                    .collect(Collectors.toList())
+            list().filter({ it.toString().trim().endsWith("." + extension) }).toList()
 
     private fun getRecursiveFileStreamFromBaseDirectory(): Stream<File> =
             Files.walk(Paths.get(baseDirectory))
                     .map { it.toFile() }
-                    .filter(File::isFile)
+                    .filter({ it.isFile })
 
 
 }

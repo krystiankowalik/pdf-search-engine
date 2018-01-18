@@ -10,6 +10,7 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.Priority
 import tornadofx.*
 
+
 class QueriesView : View() {
 
     private val controller: QueriesController by inject()
@@ -27,8 +28,6 @@ class QueriesView : View() {
         hbox {
             queryFilePath = textfield {
                 promptText = "Enter query file path"
-                //todo remove the test location!
-                text = "/home/wd43/IdeaProjects/pdf-search-engine/src/main/resources/contentnew.xlsx"
                 hgrow = Priority.ALWAYS
 
             }
@@ -93,6 +92,8 @@ class QueriesView : View() {
     fun updatePdfQuery(index: Int, newPdfQuery: PdfQuery) {
         queries[index] = newPdfQuery
     }
+
+
 
 
 }

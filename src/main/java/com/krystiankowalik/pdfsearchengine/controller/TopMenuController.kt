@@ -7,7 +7,6 @@ import com.krystiankowalik.pdfsearchengine.pdf.searcher.RegexPdfSearcherImpl
 import com.krystiankowalik.pdfsearchengine.util.whenNotEmpty
 import com.krystiankowalik.pdfsearchengine.view.TopMenu
 import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
-import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import javafx.collections.ObservableList
 import tornadofx.*
 import java.io.File
@@ -92,7 +91,7 @@ class TopMenuController : Controller() {
     }
 
     private fun File.handleDuplicate(): File {
-        return File(this.parent + File.separator + this.nameWithoutExtension + "_" + System.nanoTime() + this.extension)
+        return File(this.parent + File.separator + this.nameWithoutExtension + "_" + System.nanoTime() +"."+ this.extension)
     }
 
     private fun openFolder(folder: String) = fileOpener.openFile(folder)

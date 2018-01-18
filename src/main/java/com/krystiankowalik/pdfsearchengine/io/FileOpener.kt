@@ -1,6 +1,6 @@
 package com.krystiankowalik.pdfsearchengine.io
 
-import tornadofx.Controller
+import tornadofx.*
 import java.awt.Desktop
 import java.io.File
 

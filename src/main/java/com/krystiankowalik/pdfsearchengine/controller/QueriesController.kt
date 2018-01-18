@@ -44,7 +44,9 @@ class QueriesController : Controller() {
     }
 
     fun openFile(path: String) {
-        fileOpener.openFile(path)
+        view.root.runAsyncWithOverlay {
+            fileOpener.openFile(path)
+        }
     }
 
     fun readQueryFromFile() {

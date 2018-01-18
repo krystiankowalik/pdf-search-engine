@@ -1,8 +1,7 @@
 package com.krystiankowalik.pdfsearchengine.view
 
 import com.krystiankowalik.pdfsearchengine.controller.TopMenuController
-import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
-import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
+import com.krystiankowalik.pdfsearchengine.view.license.LicenseFragment
 import tornadofx.*
 
 class TopMenu : View() {
@@ -12,7 +11,7 @@ class TopMenu : View() {
     override val root = menubar {
         menu("File") {
 
-            item("Run single", "Ctrl+R") {
+            item("Run search", "Ctrl+R") {
                 action {
                     controller.runSearch()
                 }
@@ -26,7 +25,13 @@ class TopMenu : View() {
         }
 
         menu("Edit")
-        menu("Help")
+        menu("Help"){
+            item("About") {
+                action {
+                    LicenseFragment().openModal()
+                }
+            }
+        }
     }
 
 

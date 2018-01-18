@@ -2,6 +2,7 @@ package com.krystiankowalik.pdfsearchengine.controller
 
 import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.model.dao.searchedfiles.SearchedFileDao
+import com.krystiankowalik.pdfsearchengine.util.whenNotEmpty
 import com.krystiankowalik.pdfsearchengine.view.single.SingleQueryFragment
 import tornadofx.*
 import java.io.File
@@ -10,11 +11,19 @@ class SingleQueryController(val view: SingleQueryFragment) : Controller() {
 
     private val fileOpener = FileOpener()
 
+    init {
+        view.searchedTextField.text = view.pdfQuery.searchedText.pattern
+        search()
+    }
+
     fun search() {
-        view.pdfFilesListView.runAsyncWithOverlay {
-            getAllFilesContainingTermFromDb(Regex(view.textField.text))
-        } ui {
-            view.matchingPdfFiles.setAll(it)
+        val searchedText = view.searchedTextField.text
+        searchedText.whenNotEmpty {
+            view.pdfFilesListView.runAsyncWithOverlay {
+                getAllFilesContainingTermFromDb(Regex(searchedText))
+            } ui {
+                view.matchingPdfFiles.setAll(it)
+            }
         }
     }
 
@@ -24,7 +33,9 @@ class SingleQueryController(val view: SingleQueryFragment) : Controller() {
     }
 
     fun openFile(path: String) {
-        fileOpener.openFile(path)
+        view.root.runAsyncWithOverlay {
+            fileOpener.openFile(path)
+        }
     }
 
 

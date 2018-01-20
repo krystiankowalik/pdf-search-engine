@@ -10,7 +10,7 @@ class RegexPdfSearcherImpl(override val pdfFilePath: String) : PdfSearcher(pdfFi
     private val pdfText = pdfTextExtractor.getText()
 
     override fun containsRegex(regex: Regex): Boolean {
-        val dotMatchesAllRegex = Regex(regex.pattern, RegexOption.DOT_MATCHES_ALL)
+        val dotMatchesAllRegex = Regex(regex.pattern, setOf(RegexOption.DOT_MATCHES_ALL,RegexOption.MULTILINE,RegexOption.IGNORE_CASE))
         return pdfText.contains(dotMatchesAllRegex)
     }
 

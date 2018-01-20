@@ -28,7 +28,7 @@ class QueriesController : Controller() {
                 .asSequence()
                 .map { querySheet.getRow(it) }
                 .forEach {
-                    queries.add(PdfQuery(formatter.formatCellValue(it.first()), Regex(formatter.formatCellValue(it.getCell(1)).trim()), ""))
+                    queries.add(PdfQuery(formatter.formatCellValue(it.first()), formatter.formatCellValue(it.getCell(1)).trim(), ""))
                 }
         queries.forEach(::println)
         workbook.close()

@@ -8,6 +8,7 @@ import com.krystiankowalik.pdfsearchengine.model.dao.searchedfiles.SearchedFileD
 import com.krystiankowalik.pdfsearchengine.pdf.extractor.PdfTextExtractorImpl
 import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import tornadofx.*
+import java.io.File
 
 class SearchedFilesController : Controller() {
 
@@ -33,7 +34,11 @@ class SearchedFilesController : Controller() {
             view.root.runAsyncWithOverlay {
                 val files = listFiles(view.baseSearchFolder.text)
                         .map { SearchedFile(0, it, getPdfText(it)) }
-                files.forEach({ saveInDb(it) })
+                files.forEach({
+                    println("Processing file ${files.indexOf(it)+1}/${files.size}: ${File(it.path).name} (saving into db)")
+
+                    saveInDb(it)
+                })
                 getFromDb()
             } ui {
                 view.filesList.setAll(it)

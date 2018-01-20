@@ -26,7 +26,7 @@ class SingleQueryFragment(val pdfQuery: PdfQuery) : Fragment() {
 
     override val root = vbox {
         title = "Searching for: ${pdfQuery.description}"
-        prefWidth = 500.0
+        prefWidth = 800.0
 
         hbox {
 
@@ -50,6 +50,7 @@ class SingleQueryFragment(val pdfQuery: PdfQuery) : Fragment() {
             onDoubleClick {
                 controller.openFile(selectionModel.selectedItem.toString())
             }
+            vgrow=Priority.ALWAYS
 
         }
 
@@ -69,6 +70,8 @@ class SingleQueryFragment(val pdfQuery: PdfQuery) : Fragment() {
             hgrow = Priority.ALWAYS
 
         }
+
+        vgrow=Priority.ALWAYS
 
     }
 

@@ -1,7 +1,7 @@
 package com.krystiankowalik.pdfsearchengine.pdf.extractor
 
-import com.krystiankowalik.pdfsearchengine.pdf.encryption.PdfEncryptionCheckerImpl
 import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException
 import org.apache.pdfbox.text.PDFTextStripper
 import java.io.File
 
@@ -14,11 +14,12 @@ class PdfTextExtractorImpl(override val pdfFilePath: String) : PdfExtractor(pdfF
     }
 
     private fun extractTextFromPdfFile(pdfFile: File): String {
-        if(PdfEncryptionCheckerImpl(pdfFile).isEncrypted()){
+        try {
+            PDDocument.load(pdfFile).use {
+                return pdfTextStripper.getText(it)
+            }
+        } catch (e: InvalidPasswordException) {
             return ""
-        }
-        PDDocument.load(pdfFile).use {
-            return pdfTextStripper.getText(it)
         }
     }
 }

@@ -4,7 +4,6 @@ import com.krystiankowalik.pdfsearchengine.io.FileOpener
 import com.krystiankowalik.pdfsearchengine.io.RecursiveFileLister
 import com.krystiankowalik.pdfsearchengine.model.SearchedFile
 import com.krystiankowalik.pdfsearchengine.model.dao.searchedfiles.SearchedFileDao
-import com.krystiankowalik.pdfsearchengine.model.dao.searchedfiles.SearchedFileDmo
 import com.krystiankowalik.pdfsearchengine.pdf.extractor.PdfTextExtractorImpl
 import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import tornadofx.*
@@ -26,20 +25,29 @@ class SearchedFilesController : Controller() {
     }
 
     fun importSearchedFiles() {
-        SearchedFileDmo.createTable()
+//        SearchedFileDmo.createTable()
         importSearchedFilesTask().run()
     }
 
     private fun importSearchedFilesTask() =
             view.root.runAsyncWithOverlay {
-                val files = listFiles(view.baseSearchFolder.text)
-                        .map { SearchedFile(0, it, getPdfText(it)) }
-                files.forEach({
-                    println("Processing file ${files.indexOf(it)+1}/${files.size}: ${File(it.path).name} (saving into db)")
+                val rawFiles = listFiles(view.baseSearchFolder.text)
+                val files = rawFiles.map {
+                    println("Processing file ${rawFiles.indexOf(it)+1}/${rawFiles.size}: ${File(it).name} (extracting text from PDF)")
+                    SearchedFile(0, it, getPdfText(it))
+                }
+
+              /*  println("Saving to db")
+                SearchedFileDao.insertAll(files)
+                println("Saving to db completed")*/
+
+                /*files.forEach({
+                    println("Processing file ${files.indexOf(it) + 1}/${files.size}: ${File(it.path).name} (saving into db)")
 
                     saveInDb(it)
-                })
-                getFromDb()
+                })*/
+//                getFromDb()
+                files
             } ui {
                 view.filesList.setAll(it)
             }
@@ -47,7 +55,7 @@ class SearchedFilesController : Controller() {
     private fun getPdfText(filePath: String) =
             PdfTextExtractorImpl(filePath).getText().replace("'", "")
 
-    private fun saveInDb(searchedFile: SearchedFile) = SearchedFileDao.insert(searchedFile)
+//    private fun saveInDb(searchedFile: SearchedFile) = SearchedFileDao.insert(searchedFile)
 
     private fun getFromDb() = SearchedFileDao.getAll()
 

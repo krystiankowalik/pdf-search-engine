@@ -1,8 +1,8 @@
 package com.krystiankowalik.pdfsearchengine.controller
 
 import com.krystiankowalik.pdfsearchengine.io.FileOpener
-import com.krystiankowalik.pdfsearchengine.model.dao.searchedfiles.SearchedFileDao
 import com.krystiankowalik.pdfsearchengine.util.whenNotEmpty
+import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import com.krystiankowalik.pdfsearchengine.view.single.SingleQueryFragment
 import tornadofx.*
 import java.io.File
@@ -10,6 +10,7 @@ import java.io.File
 class SingleQueryController(val view: SingleQueryFragment) : Controller() {
 
     private val fileOpener = FileOpener()
+    private val searchedFilesView: SearchedFilesView by inject()
 
     init {
         view.searchedTextField.text = view.pdfQuery.searchedText.pattern
@@ -21,7 +22,7 @@ class SingleQueryController(val view: SingleQueryFragment) : Controller() {
         searchedText.whenNotEmpty {
             view.pdfFilesListView.runAsyncWithOverlay {
                 getAllFilesContainingTermFromDb(Regex(searchedText,
-                        setOf(RegexOption.MULTILINE,RegexOption.DOT_MATCHES_ALL,RegexOption.IGNORE_CASE)))
+                        setOf(RegexOption.MULTILINE, RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE)))
             } ui {
                 view.matchingPdfFiles.setAll(it)
             }
@@ -29,7 +30,8 @@ class SingleQueryController(val view: SingleQueryFragment) : Controller() {
     }
 
     private fun getAllFilesContainingTermFromDb(regex: Regex): List<File> {
-        val files = SearchedFileDao.getAll()
+//        val files = SearchedFileDao.getAll()
+        val files = searchedFilesView.filesList
         return files.filter { it.contents.contains(regex) }.map { File(it.path) }
     }
 

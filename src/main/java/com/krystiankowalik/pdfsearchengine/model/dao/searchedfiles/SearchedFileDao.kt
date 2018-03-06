@@ -78,5 +78,13 @@ object SearchedFileDao : Dao<SearchedFile> {
                 "VALUES ('${size()}', '${element.path}','${element.contents}')")
     }
 
+    override fun insertAll(elements: List<SearchedFile>) {
+        val sql =  elements
+                .map { "INSERT INTO $tableName (path, contents) VALUES ('${it.path}', '${it.contents}'); " }
+                .joinToString(separator = "")
+        SqLiteDb.executeStatement(sql)
+
+    }
+
 
 }

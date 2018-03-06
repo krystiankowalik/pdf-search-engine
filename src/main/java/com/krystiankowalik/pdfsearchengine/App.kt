@@ -11,16 +11,14 @@ object App {
     class TornadoApp : App(MasterView::class) {
         override fun start(stage: Stage) {
             super.start(stage)
-            stage.isMaximized=true
+            stage.isMaximized = true
         }
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-       Application.launch(TornadoApp::class.java, *args)
+        Application.launch(TornadoApp::class.java, *args)
     }
-
-
 
 
 }

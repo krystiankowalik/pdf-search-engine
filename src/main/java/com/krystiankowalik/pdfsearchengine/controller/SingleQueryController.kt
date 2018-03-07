@@ -21,7 +21,7 @@ class SingleQueryController(val view: SingleQueryFragment) : Controller() {
         val searchedText = view.searchedTextField.text
         searchedText.whenNotEmpty {
             view.pdfFilesListView.runAsyncWithOverlay {
-                getAllFilesContainingTermFromDb(Regex(searchedText,
+                getAllFilesContainingTerm(Regex(searchedText,
                         setOf(RegexOption.MULTILINE, RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE)))
             } ui {
                 view.matchingPdfFiles.setAll(it)
@@ -29,8 +29,7 @@ class SingleQueryController(val view: SingleQueryFragment) : Controller() {
         }
     }
 
-    private fun getAllFilesContainingTermFromDb(regex: Regex): List<File> {
-//        val files = SearchedFileDao.getAll()
+    private fun getAllFilesContainingTerm(regex: Regex): List<File> {
         val files = searchedFilesView.filesList
         return files.filter { it.contents.contains(regex) }.map { File(it.path) }
     }

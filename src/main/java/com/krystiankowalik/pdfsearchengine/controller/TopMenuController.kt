@@ -7,6 +7,8 @@ import com.krystiankowalik.pdfsearchengine.view.TopMenu
 import com.krystiankowalik.pdfsearchengine.view.query.QueriesView
 import com.krystiankowalik.pdfsearchengine.view.searchedfiles.SearchedFilesView
 import javafx.collections.ObservableList
+import javafx.scene.input.Clipboard
+import javafx.scene.input.ClipboardContent
 import tornadofx.*
 import java.io.File
 
@@ -15,13 +17,13 @@ class TopMenuController : Controller() {
     private val fileDialogController: FileDialogController by inject()
     private val queriesView: QueriesView by inject()
     private val fileOpener: FileOpener by inject()
-    private val searchedFilesView :SearchedFilesView by inject()
+    private val searchedFilesView: SearchedFilesView by inject()
 
     private val view: TopMenu by inject()
 
     fun runSearch() {
         queriesView.root.runAsyncWithOverlay {
-            doRunDbSearch(queriesView.queries)
+            runInMemorySearch(queriesView.queries)
         } ui {
             println("I got $it from search")
             queriesView.queries.replaceAll({ it })
@@ -29,8 +31,7 @@ class TopMenuController : Controller() {
         }
     }
 
-    private fun doRunDbSearch(queries: ObservableList<PdfQuery>): ObservableList<PdfQuery> {
-//        val searchedFiles = SearchedFileDao.getAll()
+    private fun runInMemorySearch(queries: ObservableList<PdfQuery>): ObservableList<PdfQuery> {
         val searchedFiles = searchedFilesView.filesList
         searchedFiles.forEach({ file ->
             println("Processing file ${searchedFiles.indexOf(file) + 1}/${searchedFiles.size}: ${File(file.path).name} (searching)")
@@ -83,5 +84,25 @@ class TopMenuController : Controller() {
     }
 
     private fun openFolder(folder: String) = fileOpener.openFile(folder)
+
+    fun copyQueriesToClipboard() {
+        println("I'm trying to copy ${queriesView.queries}")
+        //queriesView.queries.let {
+            val sb = StringBuilder()
+            queriesView.queries.forEach({
+                sb.append(it.description)
+                sb.append("\t")
+                sb.append(it.searchedText)
+                sb.append("\t")
+                sb.append(it.hit)
+                sb.append(System.lineSeparator())
+            })
+            val clipboardContent = ClipboardContent()
+            clipboardContent.putString(sb.toString())
+
+            // set clipboard content
+            Clipboard.getSystemClipboard().setContent(clipboardContent)
+        //}
+    }
 
 }

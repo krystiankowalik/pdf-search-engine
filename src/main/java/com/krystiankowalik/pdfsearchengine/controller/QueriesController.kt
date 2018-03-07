@@ -35,6 +35,11 @@ class QueriesController : Controller() {
         return queries
     }
 
+    private fun exportQuery(){
+
+
+    }
+
     fun pickFile(view: View) {
         val pickedFile = fileDialogController.pickFile(view, listOf("xlsx"))
         pickedFile.whenNotEmpty {
@@ -50,7 +55,7 @@ class QueriesController : Controller() {
     }
 
     fun readQueryFromFile() {
-        view.queryExtractorButton.runAsyncWithProgress {
+        view.queryImportButton.runAsyncWithProgress {
             getQuery()
         } ui {
             view.queries.setAll(it)

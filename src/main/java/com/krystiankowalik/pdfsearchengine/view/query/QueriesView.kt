@@ -7,6 +7,8 @@ import javafx.collections.FXCollections
 import javafx.scene.control.Button
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
+import javafx.scene.input.Clipboard
+import javafx.scene.input.ClipboardContent
 import javafx.scene.layout.Priority
 import tornadofx.*
 
@@ -17,7 +19,7 @@ class QueriesView : View() {
 
     lateinit var queryFilePath: TextField
     lateinit var queryTableView: TableView<PdfQuery>
-    lateinit var queryExtractorButton: Button
+    lateinit var queryImportButton: Button
 
     private val openIcon = resources.imageview("/image/folder_open.png")
     private val downloadIcon = resources.imageview("/image/icon_download.png")
@@ -37,7 +39,7 @@ class QueriesView : View() {
                 }
 
             }
-            queryExtractorButton = button("", downloadIcon) {
+            queryImportButton = button("", downloadIcon) {
                 action {
                     controller.readQueryFromFile()
                 }
@@ -59,6 +61,7 @@ class QueriesView : View() {
             shortcut("Enter") {
                 openCurrentlySelectedFile()
             }
+
 
             contextmenu {
                 item("Search") {
@@ -83,6 +86,8 @@ class QueriesView : View() {
         vgrow = Priority.ALWAYS
     }
 
+
+
     private fun openCurrentlySelectedFile() {
         if (!queryTableView.selectionModel.isEmpty) {
             controller.openFile(queryTableView.selectionModel.selectedItem.hit)
@@ -92,8 +97,6 @@ class QueriesView : View() {
     fun updatePdfQuery(index: Int, newPdfQuery: PdfQuery) {
         queries[index] = newPdfQuery
     }
-
-
 
 
 }

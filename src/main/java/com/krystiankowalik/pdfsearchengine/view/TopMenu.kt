@@ -24,7 +24,13 @@ class TopMenu : View() {
 
         }
 
-        menu("Edit")
+        menu("Edit"){
+            item("Copy queries","Ctrl+C"){
+                action{
+                    controller.copyQueriesToClipboard()
+                }
+            }
+        }
         menu("Help"){
             item("About") {
                 action {
